@@ -20,7 +20,7 @@ export interface Config {
 export const Config: Schema<Config> = Schema.object({
   消息发送间隔: Schema.number()
     .description("同一个会话内机器人发送消息的间隔，单位为ms")
-    .default(1000)
+    .required()
     .step(1)
 })
 
