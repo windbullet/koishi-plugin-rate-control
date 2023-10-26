@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-rate-control",
-  "description": "控制发送消息的速率",
-  "version": "0.0.1",
+  "description": "控制机器人发送消息的最小间隔",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -16,6 +16,6 @@
     "plugin"
   ],
   "peerDependencies": {
-    "koishi": "^4.15.1"
+    "koishi": "^4.15.0"
   }
 }
