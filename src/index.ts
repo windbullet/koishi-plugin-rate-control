@@ -28,12 +28,10 @@ export function apply(ctx: Context, config: Config) {
   let lastMessage = {}
   ctx.on("before-send", async (session) => {
     let now = Date.now()
-    if (session.event.guild.id in lastMessage) {
-      let timeDiff = now - lastMessage[session.event.guild.id]
-      if (timeDiff < config.消息发送间隔) {
-        lastMessage[session.event.guild.id] = now + (config.消息发送间隔 - timeDiff)
-        await wait(config.消息发送间隔 - timeDiff)
-      }
+    let timeDiff = now - (lastMessage[session.event.guild.id] ?? 0)
+    if (timeDiff < config.消息发送间隔) {
+      lastMessage[session.event.guild.id] = now + (config.消息发送间隔 - timeDiff)
+      await wait(config.消息发送间隔 - timeDiff)
       return false
     }
     lastMessage[session.event.guild.id] = now

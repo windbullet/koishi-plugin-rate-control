@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-rate-control",
   "description": "控制机器人发送消息的最小间隔",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -9,6 +9,11 @@
     "dist"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/windbullet/koishi-plugin-rate-control",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/windbullet/koishi-plugin-rate-control.git"
+  },
   "scripts": {},
   "keywords": [
     "chatbot",
