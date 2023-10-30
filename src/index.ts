@@ -2,7 +2,7 @@ import { Context, Schema, h } from 'koishi'
 
 export const name = 'rate-control'
 
-export const using = ['database']
+export const inject = ['database']
 
 declare module 'koishi' {
   interface Tables {
