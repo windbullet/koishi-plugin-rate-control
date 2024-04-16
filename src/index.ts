@@ -52,17 +52,17 @@ export function apply(ctx: Context, config: Config) {
   let lastMessage = {}
   ctx.on("before-send", async (session) => {
     let now = Date.now()
-    let timeDiff = now - (lastMessage[session.event.guild.id] ?? 0)
-    let data = await ctx.database.get("rateData", { guildId: session.event.guild.id })
+    let timeDiff = now - (lastMessage[session.event.channel.id] ?? 0)
+    let data = await ctx.database.get("rateData", { guildId: session.event.channel.id })
     let rateLimit = data[0]?.limit ?? config.全局消息发送间隔
 
     if (timeDiff < rateLimit) {
-      lastMessage[session.event.guild.id] = now + (rateLimit - timeDiff)
-      await wait(rateLimit - timeDiff)
+      lastMessage[session.event.channel.id] = now + (rateLimit - timeDiff)
+      await ctx.sleep(rateLimit - timeDiff)
       return false
     }
 
-    lastMessage[session.event.guild.id] = now
+    lastMessage[session.event.channel.id] = now
     return false
   })
 
@@ -74,23 +74,19 @@ export function apply(ctx: Context, config: Config) {
         if (rate < 0) {
           return h("quote", session.event.message.id) + "消息间隔不能小于0ms"
         }
-        let data = await ctx.database.get("rateData", {guildId: session.event.guild.id})
+        let data = await ctx.database.get("rateData", {guildId: session.event.channel.id})
         if (data.length === 0) {
           await ctx.database.create("rateData", {
             limit: rate,
-            guildId: session.event.guild.id
+            guildId: session.event.channel.id
           })
         } else {
-          await ctx.database.set("rateData", {guildId: session.event.guild.id}, {limit: rate})
+          await ctx.database.set("rateData", {guildId: session.event.channel.id}, {limit: rate})
         }
         return "本群消息发送间隔已设置为：" + rate + "ms"
       }
       return h("quote", session.event.message.id) + "你没有权限"
     })
-}
-
-async function wait(ms) {
-  await new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function extendTable(ctx) {

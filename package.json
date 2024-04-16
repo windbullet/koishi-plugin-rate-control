@@ -14,19 +14,20 @@
     "type": "git",
     "url": "git+https://github.com/windbullet/koishi-plugin-rate-control.git"
   },
-  "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
     "plugin"
   ],
   "peerDependencies": {
-    "koishi": "^4.15.0"
+    "koishi": "^4.17.4"
   },
   "koishi": {
     "service": {
-      "required": ["database"],    
-      "optional": [],       
+      "required": [
+        "database"
+      ],
+      "optional": [],
       "implements": []
     }
   }
