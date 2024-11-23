@@ -50,11 +50,14 @@ export const Config: Schema<Config> = Schema.object({
 export function apply(ctx: Context, config: Config) {
   extendTable(ctx)
   let lastMessage = {}
+
+  let cache = {} as any
+
   ctx.on("before-send", async (session) => {
     let now = Date.now()
     let timeDiff = now - (lastMessage[session.event.channel.id] ?? 0)
-    let data = await ctx.database.get("rateData", { guildId: session.event.channel.id })
-    let rateLimit = data[0]?.limit ?? config.全局消息发送间隔
+    cache[session.event.channel.id] ??= await ctx.database.get("rateData", { guildId: session.event.channel.id })
+    let rateLimit = cache[session.event.channel.id][0].limit ?? config.全局消息发送间隔
 
     if (timeDiff < rateLimit) {
       lastMessage[session.event.channel.id] = now + (rateLimit - timeDiff)
@@ -83,6 +86,7 @@ export function apply(ctx: Context, config: Config) {
         } else {
           await ctx.database.set("rateData", {guildId: session.event.channel.id}, {limit: rate})
         }
+        delete cache[session.event.channel.id]
         return "本群消息发送间隔已设置为：" + rate + "ms"
       }
       return h("quote", session.event.message.id) + "你没有权限"
